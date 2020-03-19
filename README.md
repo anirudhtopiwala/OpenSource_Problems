@@ -6,4 +6,4 @@ This repository is a mixture of different problems I have solved and want to doc
 ## Overview
 
 1) **LeetCode:** These are solutions to the problems I have solved on [Leetcode](https://leetcode.com/). 
-2) **Matrix Class:** Here I have created my own implementation for a matrix class. More info can be found [here]().
+2) **Matrix Class:** Here I have created my own implementation for a matrix class. More info can be found [here](https://github.com/anirudhtopiwala/OpenSource_Problems/tree/master/Matrix%20Class).
