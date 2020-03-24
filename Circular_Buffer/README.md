@@ -2,7 +2,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Overview
-Here I have my own implementation of (circular buffer)[https://en.wikipedia.org/wiki/Circular_buffer]. The basic idea is that it behaves as an endless queue. The last element of queue is connected to the first one. It is commonly used in keyboard when there is a lag between key strokes and processing time. This can be observed below:
+Here I have my own implementation of [circular buffer](https://en.wikipedia.org/wiki/Circular_buffer). The basic idea is that it behaves as an endless queue. The last element of queue is connected to the first one. It is commonly used in keyboard when there is a lag between key strokes and processing time. This can be observed below:
 
 <p align="center">
 <img src="https://github.com/anirudhtopiwala/OpenSource_Problems/blob/master/Circular_Buffer/assests/Circular_Buffer_Animation.gif">
