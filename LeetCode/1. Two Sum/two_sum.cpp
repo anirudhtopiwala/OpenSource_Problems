@@ -4,6 +4,10 @@
  * Author: Anirudh Topiwala
  * Create Date: 2020-03
  * Last Edit Date: 2020-03
+ *
+ * @brief: The idea is to look for the negative of the current number and
+ * keeping track of it. This cam be done using unordered_set. I have used
+ * unordered_map to keep track of the indices as well.
  */
 #include <iostream>
 #include <unordered_map>
