@@ -1,0 +1,21 @@
+{
+    "editor.rulers": [
+        78
+    ],
+    "editor.tokenColorCustomizations": {
+        "textMateRules": [
+            {
+                "scope": "storage.type.class.doxygen",
+                "settings": {
+                    "foreground": "#229977"
+                }
+            },
+            {
+                "scope": "variable.parameter.c,comment.block.documentation.c",
+                "settings": {
+                    "foreground": "#6272A4"
+                }
+            }
+        ]
+    }
+}
