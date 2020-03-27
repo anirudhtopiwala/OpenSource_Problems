@@ -94,27 +94,28 @@ class SphericalConversion {
   auto GetImg() const;
   /**
    * @brief Use OpenCv to view the spherical image formed
-   * 
-   * @param img 
+   *
+   * @param img
    */
-  void ShowImg(const std::vector<std::vector<std::vector<double>>>& img)const;
+  void ShowImg(const std::vector<std::vector<std::vector<double>>>& img) const;
 
  private:
   /**
    * @brief The configuration required for forming the spherical projection
-   * 
+   *
    */
-  Configuration config_{};
+  const Configuration config_;
   /**
    * @brief this will hold the projected image
-   * 
+   *
    */
-  std::vector<std::vector<std::vector<double>>> sp_img_;
+  std::vector<std::vector<std::vector<double>>> spherical_img_;
   /**
-   * @brief the point cloud will be loaded and accesible to the class through this variable.
-   * 
+   * @brief the point cloud will be loaded and accesible to the class through
+   * this variable.
+   *
    */
   pcl::PointCloud<pcl::PointXYZI>::Ptr cloud_;
 };
 
-#endif //SPHERICAL_VIEW_PROJECTION_SPHERICAL_VIEW_PROJECTION_H_
+#endif  // SPHERICAL_VIEW_PROJECTION_SPHERICAL_VIEW_PROJECTION_H_

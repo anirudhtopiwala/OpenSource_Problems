@@ -24,9 +24,9 @@
 
 SphericalConversion::SphericalConversion(const Configuration& config)
     : config_(config) {
-  sp_img_.assign(config_.num_lasers,
-                 std::vector<std::vector<double>>(config_.img_length,
-                                                  std::vector<double>(5, 0.0)));
+  spherical_img_.assign(config_.num_lasers,
+                        std::vector<std::vector<double>>(
+                            config_.img_length, std::vector<double>(5, 0.0)));
   cloud_ =
       pcl::PointCloud<pcl::PointXYZI>::Ptr(new pcl::PointCloud<pcl::PointXYZI>);
 };
@@ -39,9 +39,11 @@ int SphericalConversion::LoadCloud(const std::string& path) {
   }
   return 1;
 }
-int SphericalConversion::MakeImage(){
+int SphericalConversion::MakeImage() {
+  // Converting to Radians
   double fov_up_rad = (config_.fov_up / 180) * M_PI;
   double fov_down_rad = (config_.fov_down / 180) * M_PI;
+  // Getting total Field of View
   double fov_rad = std::abs(fov_up_rad) + std::abs(fov_down_rad);
   if (cloud_->size() == 0) {
     std::cerr << "Empty Point Cloud_" << std::endl;
@@ -54,8 +56,9 @@ int SphericalConversion::MakeImage(){
     int pixel_y = 0;
     double depth = 0.0;
     GetProjection(point, fov_rad, fov_down_rad, &pixel_x, &pixel_y, &depth);
-    std::vector<double> image_info_point{point.x, point.y, point.z, depth, point.intensity};
-    sp_img_[pixel_y][pixel_x] = image_info_point;
+    std::vector<double> image_info_point{point.x, point.y, point.z, depth,
+                                         point.intensity};
+    spherical_img_.at(pixel_y).at(pixel_x) = image_info_point;
   }
   return 1;
 }
@@ -70,11 +73,10 @@ void SphericalConversion::GetProjection(const pcl::PointXYZI& point,
   //  Getting the angle of all the Points
   auto yaw = atan2(point.y, point.x);
   auto pitch = asin(point.z / *depth);
-  // Get projections in image coords and scale to image size using
-  // angular resolution
+  // Get projections in image coords and normalizing
   double x = 0.5 * (yaw / M_PI + 1.0);
   double y = 1.0 - (pitch + std::abs(fov_down_rad)) / fov_rad;
-
+  // Scaling as per the lidar config given
   x *= config_.img_length;
   y *= config_.num_lasers;
   // round and clamp for use as index
@@ -89,14 +91,14 @@ void SphericalConversion::GetProjection(const pcl::PointXYZI& point,
   *pixel_y = int(y);
 }
 
-auto SphericalConversion::GetImg() const { return sp_img_;}
+auto SphericalConversion::GetImg() const { return spherical_img_; }
 
-void SphericalConversion::ShowImg(const std::vector<std::vector<std::vector<double>>>& img)const{
+void SphericalConversion::ShowImg(
+    const std::vector<std::vector<std::vector<double>>>& img) const {
   cv::Mat sp_img(img.size(), img.at(0).size(), CV_64FC1);
   for (int i = 0; i < sp_img.rows; ++i) {
     for (int j = 0; j < sp_img.cols; ++j) {
       sp_img.at<double>(i, j) = img.at(i).at(j).at(4);
-
     }
   }
   cv::imshow("Intensity Image", sp_img);
@@ -104,12 +106,18 @@ void SphericalConversion::ShowImg(const std::vector<std::vector<std::vector<doub
 }
 
 int main() {
-  // For Velodyne VLP 16
-  const Configuration config_input{2, -20, 64, 1024};
-  const std::string path = "/home/" + std::string(getenv("USER")) +
+  /** For Velodyne HDL 64-E
+   * Fov_Up = 2 degrees
+   * Fov_Down = -24.8 degrees
+   * Num of Lasers = 64
+   * Best length of image comes out to be = 1024
+   */
+  const Configuration config_input{2, -24.8, 64, 1024};
+  const std::string path =
+      "/home/" + std::string(getenv("USER")) +
       "/OpenSource_Problems/Spherical_View_Projection/assests/"
-      "test_pcd0.pcd";
-std::cout<<path<<std::endl;
+      "test_cloud.pcd";
+  std::cout << path << std::endl;
   SphericalConversion conv(config_input);
   conv.LoadCloud(path);
   conv.MakeImage();
