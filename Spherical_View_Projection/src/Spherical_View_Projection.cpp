@@ -49,16 +49,14 @@ int SphericalConversion::MakeImage() {
     std::cerr << "Empty Point Cloud_" << std::endl;
     return -1;
   }
-  for (size_t i = 0; i < cloud_->points.size(); ++i) {
-    pcl::PointXYZI point = cloud_->points[i];
+  for (auto point : *cloud_) {
     // Getting Pixel from Point
-    int pixel_x = 0;
-    int pixel_y = 0;
-    double depth = 0.0;
-    GetProjection(point, fov_rad, fov_down_rad, &pixel_x, &pixel_y, &depth);
-    std::vector<double> image_info_point{point.x, point.y, point.z, depth,
-                                         point.intensity};
-    spherical_img_.at(pixel_y).at(pixel_x) = image_info_point;
+    int pixel_v = 0;
+    int pixel_u = 0;
+    double range = 0.0;
+    GetProjection(point, fov_rad, fov_down_rad, &pixel_v, &pixel_u, &range);
+    spherical_img_.at(pixel_u).at(pixel_v) =
+        std::vector<double>{point.x, point.y, point.z, range, point.intensity};
   }
   return 1;
 }
@@ -66,29 +64,29 @@ int SphericalConversion::MakeImage() {
 void SphericalConversion::GetProjection(const pcl::PointXYZI& point,
                                         const double& fov_rad,
                                         const double& fov_down_rad,
-                                        int* pixel_x, int* pixel_y,
-                                        double* depth) const {
-  // Depth of Point from Lidar
-  *depth = sqrt(point.x * point.x + point.y * point.y + point.z * point.z);
+                                        int* pixel_v, int* pixel_u,
+                                        double* range) const {
+  // range of Point from Lidar
+  *range = sqrt(point.x * point.x + point.y * point.y + point.z * point.z);
   //  Getting the angle of all the Points
   auto yaw = atan2(point.y, point.x);
-  auto pitch = asin(point.z / *depth);
+  auto pitch = asin(point.z / *range);
   // Get projections in image coords and normalizing
-  double x = 0.5 * (yaw / M_PI + 1.0);
-  double y = 1.0 - (pitch + std::abs(fov_down_rad)) / fov_rad;
+  double v = 0.5 * (yaw / M_PI + 1.0);
+  double u = 1.0 - (pitch + std::abs(fov_down_rad)) / fov_rad;
   // Scaling as per the lidar config given
-  x *= config_.img_length;
-  y *= config_.num_lasers;
+  v *= config_.img_length;
+  u *= config_.num_lasers;
   // round and clamp for use as index
-  x = floor(x);
-  x = std::min(config_.img_length - 1, x);
-  x = std::max(0.0, x);
-  *pixel_x = int(x);
+  v = floor(v);
+  v = std::min(config_.img_length - 1, v);
+  v = std::max(0.0, v);
+  *pixel_v = int(v);
 
-  y = floor(y);
-  y = std::min(config_.num_lasers - 1, y);
-  y = std::max(0.0, y);
-  *pixel_y = int(y);
+  u = floor(u);
+  u = std::min(config_.num_lasers - 1, u);
+  u = std::max(0.0, u);
+  *pixel_u = int(u);
 }
 
 auto SphericalConversion::GetImg() const { return spherical_img_; }
@@ -98,7 +96,7 @@ void SphericalConversion::ShowImg(
   cv::Mat sp_img(img.size(), img.at(0).size(), CV_64FC1);
   for (int i = 0; i < sp_img.rows; ++i) {
     for (int j = 0; j < sp_img.cols; ++j) {
-      sp_img.at<double>(i, j) = img.at(i).at(j).at(4);
+      sp_img.at<double>(i, j) = img.at(i).at(j).at(4); //Intensity value
     }
   }
   cv::imshow("Intensity Image", sp_img);
