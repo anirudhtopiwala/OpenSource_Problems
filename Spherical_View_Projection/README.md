@@ -9,7 +9,7 @@ Spherical Projection or Front View projection is nothing but a way to represent 
 
 Here the the upper part shows the intensity values for the spherical image formed from the point cloud shown in the lower part. The data below is taken from sequence 3 of the [SemnaticKitti](http://semantic-kitti.org/) dataset.
 <p align="center">
-<img src="https://github.com/Ghost1995/object_collection_robotic_arm/blob/master/additional_files/BR.gif">
+<img src="https://github.com/anirudhtopiwala/OpenSource_Problems/blob/master/Spherical_View_Projection/assests/Sphereical_projection.gif">
 </p>
 
 A more clearer video can be found on YouTube [here](https://youtu.be/1vSI_j435Vs).
