@@ -13,7 +13,8 @@
 #ifndef SPHERICAL_VIEW_PROJECTION_SPHERICAL_VIEW_PROJECTION_H_
 #define SPHERICAL_VIEW_PROJECTION_SPHERICAL_VIEW_PROJECTION_H_
 
-#include <pcl/point_types.h>  // For PCL different cloud types
+#include <pcl/point_cloud.h>  // For PCL Point Cloud
+#include <pcl/point_types.h>  // For PCL different csloud types
 
 #include <vector>
 

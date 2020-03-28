@@ -11,14 +11,13 @@
  *
  */
 
+#include "Spherical_View_Projection/Spherical_View_Projection.h"
+
 #include <math.h>
+#include <opencv2/opencv.hpp> // For visualizing image
+#include <pcl/point_cloud.h>  // For PCL Point Cloud
 #include <pcl/io/pcd_io.h>    // For Reading the Cloud
 #include <pcl/point_types.h>  // For PCL different cloud types
-
-#include <opencv2/highgui/highgui.hpp>
-#include <opencv2/opencv.hpp>
-
-#include "Spherical_View_Projection/Spherical_View_Projection.h"
 
 #include <vector>
 
