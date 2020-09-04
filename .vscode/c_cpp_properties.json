@@ -2,20 +2,11 @@
     "configurations": [
         {
             "name": "Linux",
-            "browse": {
-                "databaseFilename": "",
-                "limitSymbolsToIncludedHeaders": true
-            },
             "includePath": [
-                "${workspaceFolder}/**",
-                "/opt/ros/kinetic/include/**",
-                "/usr/include/**"
+                "${workspaceFolder}/**"
             ],
             "defines": [],
-            "compilerPath": "/usr/bin/gcc",
-            "cStandard": "c11",
-            "cppStandard": "c++17",
-            "intelliSenseMode": "clang-x64"
+            "cppStandard": "c++14"
         }
     ],
     "version": 4
