@@ -5,10 +5,15 @@
  * Create Date: 2020-08
  * Last Edit Date: 2020-08
  *
- * @brief Implements two funtions:
- *         1) Check if a point is inside a polygon using windinding number
+ * @brief Check if a Point is Inside , On or Outside a given Polygon
+ *        Implements two funtions:
+ *        1) Check if a point is inside a polygon using windinding number
  *            algorithm.
- *         2) A simpler way to check if a point is inside a convex polygon.
+ *        2) A simpler way to check if a point is inside a convex polygon.
+ *
+ * A more detailed explanation can be found on my blog post
+ * "Is the Point Inside the Polygon"
+ * (https://medium.com/@topiwala.anirudh/is-the-point-inside-the-polygon-574b86472119)
  *
  */
 
@@ -73,7 +78,8 @@ int is_point_inside_convex_polygon(const Eigen::Vector2d &query_point,
  * @brief Check if a point lies inside, on or outside any polygon.
  *
  * Winding number algorithm can be used to check if any point lies inside a
- * polygon. A more detailed explanation can be found in the blog post here.
+ * polygon. A more detailed explanation can be found in the blog post. The link
+ * is attached at the top of the file.
  *
  *
  * @param query_point Point to check.
@@ -135,6 +141,8 @@ int main() {
         }
     }
 
+    std::cout << "\n";
+
     // Convex Polygons
     std::cout << "For Convex Polygon..." << std::endl;
     // Triangle
@@ -149,6 +157,8 @@ int main() {
                       << " the polygon." << std::endl;
         }
     }
+
+    std::cout << "\n";
 
     // Quadrilateral
     {
