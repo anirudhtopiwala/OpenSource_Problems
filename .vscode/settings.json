@@ -77,5 +77,6 @@
         "core": "cpp",
         "*.ipp": "cpp",
         "string": "cpp"
-    }
+    },
+    "python.pythonPath": "env/bin/python"
 }
