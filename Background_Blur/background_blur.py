@@ -12,6 +12,7 @@ from torchvision import transforms
 import numpy as np
 import argparse
 import sys
+import time
 
 # Desired Image Dimensions.
 IMG_WIDTH = 480
@@ -22,7 +23,7 @@ def blur(img):
     return cv2.GaussianBlur(img, (25, 25), 0)
 
 
-def pre_process(img):
+def to_tensor(img):
     # Preprocess the image to meet the input requirement of the networks.
     preprocess = transforms.Compose([
         transforms.ToTensor(),
@@ -34,6 +35,9 @@ def pre_process(img):
 
 
 def get_object_mask(img, model, method):
+    if torch.cuda.is_available():
+        img = img.to('cuda:0')
+        model = model.to('cuda:0')
     if method == "deeplabv3":
         with torch.no_grad():
             output = model(img)['out'][0]
@@ -68,20 +72,25 @@ def live_background_blur(model, method):
     cv2.namedWindow("Input Image")
     cv2.namedWindow("Background Blur")
 
+    # To get processing rate in Fps.
+    start_time = time.time()
+
+    frame_count = 0
+
     # Loop until user presses ESC key.
     while vc.grab():
         _, frame = vc.read()
+        frame_count += 1
         frame = cv2.resize(frame, dsize=(IMG_HEIGHT, IMG_WIDTH), interpolation=cv2.INTER_CUBIC)
 
         # Blur the image. You can control the instensity of blur by repeatedly calling it.
         blur_image = blur(blur(blur(blur(blur(frame)))))
 
         # Get Mask to un-blur.
-        pre_processed_img = pre_process(frame)
-        if torch.cuda.is_available():
-            pre_processed_img = pre_processed_img.to('cuda')
-            model.to('cuda')
-        object_mask = get_object_mask(pre_processed_img, model, method)
+        t1 = time.time()
+        img = to_tensor(frame)
+        object_mask = get_object_mask(img, model, method)
+        print("Processing time per frame: ", time.time() - t1)
 
         # Apply object mask to actual image.
         image_with_mask = cv2.bitwise_and(frame, frame, mask=object_mask)
@@ -96,9 +105,12 @@ def live_background_blur(model, method):
         cv2.imshow("Input Image", frame)
         cv2.imshow("Background Blur", final_image)
 
-        key = cv2.waitKey(0)
+        key = cv2.waitKey(1)
         if key == 27:  # exit on ESC
             break
+
+    end_time = time.time()
+    print("Average frame rate: ", frame_count/ (end_time - start_time))
 
     # Close window
     cv2.destroyWindow("Input Image")
@@ -117,7 +129,7 @@ def main(argv) -> None:
     args = parser.parse_args(argv)
 
     model_names = {"deeplabv3": ['pytorch/vision:v0.6.0', 'deeplabv3_resnet101'],
-                   "midas": ["intel-isl/MiDasS", "MiDasS"]}
+                   "midas": ["intel-isl/MiDaS", "MiDaS"]}
 
     if args.method in model_names:
         model = torch.hub.load(model_names[args.method][0],
