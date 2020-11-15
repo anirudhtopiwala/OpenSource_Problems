@@ -80,6 +80,7 @@ def live_background_blur(model, method):
     # Loop until user presses ESC key.
     while vc.grab():
         _, frame = vc.read()
+        frame = cv2.flip(frame,1)
         frame_count += 1
         frame = cv2.resize(frame, dsize=(IMG_HEIGHT, IMG_WIDTH), interpolation=cv2.INTER_CUBIC)
 
@@ -90,7 +91,7 @@ def live_background_blur(model, method):
         t1 = time.time()
         img = to_tensor(frame)
         object_mask = get_object_mask(img, model, method)
-        print("Processing time per frame: ", time.time() - t1)
+        print("Processing time in seconds per frame: ", time.time() - t1)
 
         # Apply object mask to actual image.
         image_with_mask = cv2.bitwise_and(frame, frame, mask=object_mask)
@@ -136,6 +137,8 @@ def main(argv) -> None:
                                model_names[args.method][1], pretrained=True)
         model.eval()
         live_background_blur(model, args.method)
+    else:
+        print("Invalid method type. Enter midas or deeplabv3.")
 
 
 if __name__ == '__main__':
