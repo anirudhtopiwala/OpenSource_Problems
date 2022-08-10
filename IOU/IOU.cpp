@@ -1,16 +1,15 @@
-#include <iostream>
 #include <algorithm>
+#include <iostream>
 
-
-//Top Left Corner of the rectangle
-struct Rect{ 
-    double x;
-    double y;
-    double length;
-    double breadth;
+// Top Left Corner of the rectangle
+struct Rect {
+  double x;
+  double y;
+  double length;
+  double breadth;
 };
 
-double GetIou(const Rect& a, const Rect& b) {
+double GetIou(const Rect &a, const Rect &b) {
   const auto bottom_right_corner_x = std::min(a.x + a.length, b.x + b.length);
   const auto bottom_right_corner_y = std::min(a.y + a.breadth, b.y + b.breadth);
 
@@ -29,10 +28,10 @@ double GetIou(const Rect& a, const Rect& b) {
 }
 
 int main() {
-    
-    Rect b{2,2,1,1};
-    Rect a{1.5,1.5,1,1};
-    auto iou = GetIou(a,b);
-    std::cout<< iou << std::endl;
-    return 0;
+
+  Rect b{2, 2, 1, 1};
+  Rect a{1.5, 1.5, 1, 1};
+  auto iou = GetIou(a, b);
+  std::cout << iou << std::endl;
+  return 0;
 }
