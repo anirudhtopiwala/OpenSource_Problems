@@ -1,21 +1,5 @@
 import numpy as np
 
-# Image dimensions
-H = W = 512
-
-# Number of predicted and ground-truth boxes
-N = 20
-M = 30
-
-# Generate N predicted boxes and M ground-truth boxes
-# Format: [top-left, bottom-right] with shape (N, 2) and (M, 2)
-predicted_top_left = np.random.randint(0, H // 2, size=(N, 2))
-predicted_bottom_right = np.random.randint(H // 2, H, size=(N, 2))
-
-gt_top_left = np.random.randint(0, H // 2, size=(M, 2))
-gt_bottom_right = np.random.randint(H // 2, H, size=(M, 2))
-
-
 def iou(
     box1_top_left: np.ndarray,
     box1_bottom_right: np.ndarray,
@@ -64,6 +48,22 @@ def iou(
     iou_matrix = np.where(union_area == 0, 0.0, intersect_area / union_area)
 
     return iou_matrix
+
+
+# Image dimensions
+H = W = 512
+
+# Number of predicted and ground-truth boxes
+N = 20
+M = 30
+
+# Generate N predicted boxes and M ground-truth boxes
+# Format: [top-left, bottom-right] with shape (N, 2) and (M, 2)
+predicted_top_left = np.random.randint(0, H // 2, size=(N, 2))
+predicted_bottom_right = np.random.randint(H // 2, H, size=(N, 2))
+
+gt_top_left = np.random.randint(0, H // 2, size=(M, 2))
+gt_bottom_right = np.random.randint(H // 2, H, size=(M, 2))
 
 
 # Compute pairwise IoUs
